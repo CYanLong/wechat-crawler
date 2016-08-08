@@ -1,3 +1,6 @@
+#-*_utf-8_*-
+
+
 from flask import Flask
 from flask import request
 import hashlib
@@ -7,44 +10,33 @@ from xml.etree import ElementTree
 from lxml import etree
 from flask import Response
 import time
+from myutils import resp_message
+from crawler import get_news
+import logging
+logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 
 @app.route('/', methods = {'GET'})
 def checkSignature():
-    print('--get method--')
-    print(request.data)
+    '''token verification
+    '''
+
     return request.args.get('echostr')
 
 @app.route('/', methods = {'POST'})
 def pro_message():
-    print('--post--')
-    str_xml = request.data
-    xml = etree.fromstring(str_xml) #..XML.
-    print(etree.tostring(xml, pretty_print=True).decode())
-    content = xml.find('Content').text.encode('utf-8')
-    msgType = xml.find('MsgType').text.encode('utf-8')
-    print("Content: %s, msgType: %s" % (content, msgType))
+    '''process message
+    '''
+    req_xml = etree.fromstring(request.data) #..XML.
+    logging.info(etree.tostring(req_xml, pretty_print=True).decode())
 
-
-    root = etree.Element('xml')
-    toUserName = etree.SubElement(root, "ToUserName")
-    toUserName.text = etree.CDATA(xml.find('FromUserName').text)
-
-    fromUserName = etree.SubElement(root, "FromUserName")
-    fromUserName.text = etree.CDATA(xml.find('ToUserName').text)
-
-    createTime = etree.SubElement(root, 'CreateTime')
-    createTime.text = str(int(time.time()))
+    content = get_news(2)
+    resp_xml = resp_message(req_xml, content)
     
-    msgType = etree.SubElement(root, 'MsgType')
-    msgType.text = etree.CDATA(xml.find('MsgType').text)
+    loggine.info(etree.tostring(root, pretty_print=True).decode())
     
-    content = etree.SubElement(root, 'Content')
-    content.text = etree.CDATA('lalal')
-    
-    print(etree.tostring(root,pretty_print=True).decode())
-    return Response(etree.tostring(root), mimetype = 'text/xml') 
+    return Response(etree.tostring(resp_xml), mimetype = 'text/xml') 
 
 
 if __name__ == '__main__':
