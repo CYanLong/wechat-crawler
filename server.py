@@ -32,14 +32,19 @@ def checkSignature():
 
 @app.route('/', methods = {'POST'})
 def pro_message():
-	print('====')
+	'''
+	接收并分析消息,调用对应的模块获取到数据并返回.
+	'''
+
 	req_xml = etree.fromstring(request.data)
+	
 	logging.info(etree.tostring(req_xml, pretty_print=True, encoding='utf-8'))
 	
-	#mesType = req_xml.find('MsgType').text
+	#首先得到消息类型.
+	mesType = req_xml.find('MsgType').text
 	
-	#if mesType  == 'image':
-	#	return "lalala"
+	if mesType  == 'image':
+		return 
 	
 	li_mess = req_xml.find('Content').text.split(" ")
 	li_mess = [ s for s in li_mess if s != " "]
