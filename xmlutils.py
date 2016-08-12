@@ -1,12 +1,13 @@
+#!/usr/bin/python
 #-*- encoding=utf-8 -*-
 import time
 import chardet
 from lxml import etree
 import logging
 
-def resp_message(req_xml, content_str):
-	
-	
+def respMessage(req_xml, content_str):
+	'''回复普通消息
+	'''	
 	resp_xml = etree.Element('xml')
     
 	toUserName = etree.SubElement(resp_xml, "ToUserName")
@@ -32,7 +33,9 @@ def resp_message(req_xml, content_str):
 	return resp_xml
 
 
-def resp_imageAndText(req_xml, title, desc, picUrl):
+def respImageAndText(req_xml, title, desc, picUrl):
+	'''回复图文消息
+	'''
 	resp_xml = etree.Element('xml')
 	toUserName = etree.SubElement(resp_xml, 'ToUserName')
 	toUserName.text = etree.CDATA(req_xml.find('FromUserName').text)
@@ -55,7 +58,9 @@ def resp_imageAndText(req_xml, title, desc, picUrl):
 	
 	return resp_xml
 
-def resp_media(req_xml):
+def respMedia(req_xml):
+	'''回复媒体信息,图片,音频等
+	'''
 	resp_xml = etree.Element('xml')
 	toUserName = etree.SubElement(resp_xml, "ToUserName")
 	toUserName.text = etree.CDATA(req_xml.find('FromUserName').text)

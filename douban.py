@@ -5,7 +5,9 @@ import requests
 import json
 from scrapy.selector import Selector
 import logging
+
 logging.basicConfig(level=logging.DEBUG)
+
 def getDataById(mid):
 	'''根据电影id得到电影的详细描述信息:title, desc picUrl
 
@@ -66,8 +68,8 @@ def getMovieByName(movieName):
 		logging.debug(mid)
 		return getDataById(mid)
 
-#测试
-if __name__ == '__main__':
-	#getMovieBySub("纪录片")
 
+if __name__ == '__main__':
+	'''测试'''
+	#getMovieBySub("纪录片")
 	#getMovieByName('Sprin')
