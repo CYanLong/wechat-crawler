@@ -5,8 +5,25 @@ import requests
 import json
 
 
+def getDataById(mid):
+	'''根据电影id得到电影的详细描述信息:title, desc picUrl
 
-#根据分类得到电影信息
+	'''
+	itemUrl = 'https://api.douban.com/v2/movie/'
+	item_json_url = item_json_url + mid
+	
+	item_json = requests.get(item_json_url)
+	
+	itemData = json.loads(item_json.content.decode('utf-8'))
+	#得到json数据,解析并拼接返回结果.
+	rate = itemData['rating']['average'] #评分
+	numRaters = itemData['rating']['numRaters'] #评论人数
+	#描述
+	desc =  '\n原名: ' + itemData['title'] + '\n豆瓣评分: ' + str(itemData['rating']['average']) + '(' + str(itemData['rating']['numRaters']) +  '人评)' + '\n 剧情简介: ' + itemData['summary'] + '\n 豆瓣链接:' + item_url
+	title = itemData['alt_title']
+	picUrl = itemData['image']
+	return title, desc, picUrl
+
 def getMovieBySub(tag="经典"):
 	
 	req_param = {
@@ -30,27 +47,6 @@ def getMovieBySub(tag="经典"):
 	mid = item_url.split('/')[-2]
 	
 	return getDataById(mid)
-	
-
-def getDataById(mid):
-	'''根据电影id得到电影的详细描述信息:title, desc picUrl
-
-	'''
-	itemUrl = 'https://api.douban.com/v2/movie/'
-	item_json_url = item_json_url + mid
-	
-	item_json = requests.get(item_json_url)
-	
-	itemData = json.loads(item_json.content.decode('utf-8'))
-	#得到json数据,解析并拼接返回结果.
-	rate = itemData['rating']['average'] #评分
-	numRaters = itemData['rating']['numRaters'] #评论人数
-	#描述
-	desc =  '\n原名: ' + itemData['title'] + '\n豆瓣评分: ' + str(itemData['rating']['average']) + '(' + str(itemData['rating']['numRaters']) +  '人评)' + '\n 剧情简介: ' + itemData['summary'] + '\n 豆瓣链接:' + item_url
-	title = itemData['alt_title']
-	picUrl = itemData['image']
-	return title, desc, picUrl
-
 
 def getMovieDetail(movieName):
 	'''根据电影名得到电影详细信息,首先得到mid,调用getDataById得到详细信息
