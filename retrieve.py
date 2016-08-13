@@ -58,9 +58,9 @@ def getdetail(resp, num):
 	li_h_se = Selector(text=resp.content.decode('utf-8')).xpath('//div[@class="jp-searchList"]/ul/li/h2/a')
 	
 	li_href = li_h_se.xpath('.//@href').extract()
-	#li_bid = href.split('/')[-1]
+
 	li_bname =li_h_se.xpath('.//text()').extract()
-	print(li_bname)
+
 	items = []
 	for i in range(0, num):
 		author = li_author[i].strip()
@@ -116,4 +116,4 @@ def getBookState(bid):
 
 if __name__ == '__main__':
 	'''测试'''
-	print(search('红与黑'))
+	#print(search('红与黑'))

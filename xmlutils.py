@@ -30,7 +30,7 @@ def respMessage(req_xml, content_str):
 	
 	msgType = etree.SubElement(resp_xml, 'MsgType')
 	
-	msgType.text = etree.CDATA(req_xml.find('MsgType').text)
+	msgType.text = etree.CDATA('text')
 	
 	content = etree.SubElement(resp_xml, 'Content')
 	#logging.info("======content charset: %s ======" % chardet.detect(content_str)['encoding'])
