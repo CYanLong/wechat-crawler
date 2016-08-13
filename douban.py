@@ -1,6 +1,12 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
 
+'''
+	author: cyanlong
+	data: 2016-08-13
+
+'''
+
 import requests
 import json
 from scrapy.selector import Selector
@@ -23,8 +29,18 @@ def getDataById(mid):
 	#得到json数据,解析并拼接返回结果.
 	rate = itemData['rating']['average'] #评分
 	numRaters = itemData['rating']['numRaters'] #评论人数
+	li_cast = itemData['attrs']['cast']
+	n = len(li_cast)
+	n = 3 if n > 3 else n 
+	casts = " ".join(li_cast[:n])
 	#描述
-	desc =  '\n\n原名: ' + itemData['title'] + '\n\n豆瓣评分: ' + str(itemData['rating']['average']) + '(' + str(itemData['rating']['numRaters']) +  '人评)' + '\n\n 剧情简介: ' + itemData['summary'] + '\n\n 豆瓣链接:' + itemUrl
+	def desc_str():
+		yield '\n\n原名: ' + itemData['title'] 
+		yield '\n\n豆瓣评分: ' + str(itemData['rating']['average']) + '(' + str(itemData['rating']['numRaters']) + '人评)' 
+		yield '\n\n导演:' + itemData['author'][0]['name'] + '\n\n主演:' + casts
+		yield '\n\n剧情简介: ' + itemData['summary']
+		yield '\n\n豆瓣链接:' + itemUrl
+	desc = ''.join(desc_str())
 	title = itemData['alt_title']
 	picUrl = itemData['image']
 	return title, desc, picUrl
@@ -46,9 +62,9 @@ def getMovieBySub(start, tag="经典"):
 	resp = requests.get(sub_url, params = req_param)
 	
 	li = json.loads(resp.content.decode('utf-8'))['subjects']
-	#print(str(li).encode('utf-8'))
+	
 	item = li[0]
-	#print(str(item).encode('utf-8'))
+	
 	itemUrl = item['url']
 	#电影的id
 	mid = itemUrl.split('/')[-2]
@@ -63,21 +79,21 @@ def getMovieByName(movieName):
 	resp = requests.get(search_url)
 
 	items = Selector(text=resp.content.decode('utf-8')).xpath('//div[@class="article"]/div/table[@width="100%"]/tr[@class="item"]/td[@valign="top"]/a/@href').extract()
-	logging.debug(items)
+	
 	if len(items) == 0:
 		return "无法找到"
 	
 	else:
 		#只取第一项
 		mid = items[0].split('/')[-2]
-		logging.debug(mid)
+		
 		return getDataById(mid)
 
 
 def movieByTag(userId, tag="经典"):
 	''' 根据不同的用户返回不同的信息
 	'''
-	#logging.debug(userId, tag)
+	
 	start = start_num(userId, tag)
 	
 	return getMovieBySub(start, tag)
@@ -86,8 +102,4 @@ def movieByTag(userId, tag="经典"):
 if __name__ == '__main__':
 	'''测试
 	'''
-	#start = movieByTag('123', tag='同性')
-	#print(start)
-	#getMovieBySub('123')
-	#getMovieBySub("纪录片")
-	##getMovieBySub('23', "纪录片")
+	print(getMovieBySub(1, tag="同性"))

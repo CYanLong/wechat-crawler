@@ -1,4 +1,12 @@
 #-*-utf-8-*-
+'''
+	author: cyanlong
+	data: 2016-08-13
+
+	抓取黑大校内通知,但由于云服务器外网无法访问黑大内网,暂且搁置
+
+'''
+
 from scrapy.selector import Selector
 from scrapy.http import HtmlResponse
 import requests

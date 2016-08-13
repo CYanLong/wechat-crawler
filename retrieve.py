@@ -1,5 +1,10 @@
 #!/usr/bin/python
-#_*_ coding=utf-8 _*-
+#-*- coding: utf-8 -*-
+
+'''
+	author: cyanlong
+	data: 2016-08-13
+'''
 
 import requests
 from scrapy.selector import Selector
@@ -24,16 +29,14 @@ def search(q):
 	}
 	
 	resp = requests.post(search_url, data=fdata)
-	with open('search.html', 'w', encoding='utf-8') as f:
-		f.write(resp.content.decode('utf-8'))
-
+	#得到记录条数
 	s_res = Selector(text=resp.content.decode('utf-8')).xpath('//p[@id="page"]/span/text()')
+	#如没有检索到记录,result_list为空
 	result_list = s_res.extract()
 	if len(result_list) == 0:
 		return "没有检索到记录"
 	result_str = result_list[0]
 	num = int(s_res.re('[\d]+')[0])
-	print("num: %s" % num)
 	
 	if num > 3:
 		note = ""
@@ -57,7 +60,7 @@ def getdetail(resp, num):
 	li_href = li_h_se.xpath('.//@href').extract()
 	#li_bid = href.split('/')[-1]
 	li_bname =li_h_se.xpath('.//text()').extract()
-	#print(str(bname).encode('utf-8'))
+	print(li_bname)
 	items = []
 	for i in range(0, num):
 		author = li_author[i].strip()
@@ -85,15 +88,19 @@ def getManyLinks(resp, num):
 	'''记录大于3条,只返回前10条链接
 	'''
 	num = 10 if num > 10 else num
+	
+	li_bname = Selector(text=resp.content.decode('utf-8')).xpath('//div[@class="jp-searchList"]/ul/li/h2/a/text()').extract()
+
 	li_href = Selector(text=resp.content.decode('utf-8')).xpath('//div[@class="jp-searchList"]/ul/li/h2/a/@href').extract()[0: num]
 	li_link = [root_url + href for href in li_href]
 	li_publisher = Selector(text=resp.content.decode('utf-8')).xpath('//div[@class="jp-booksInfo"]/p[@class="publisher"]/text()').extract()
 	
 	items = []
 	for i in range(0, num):
+		name = '\n书名:' + li_bname[i]
 		publisher = "\n出版社:" + li_publisher[2*i + 1]
-		content = "\n详细信息:" + li_link[i]
-		items.append(publisher + content)
+		content = "\n详细信息:" + li_link[i]		
+		items.append(name + publisher + content)
 	
 	return "\n======".join(items)
 
@@ -109,4 +116,4 @@ def getBookState(bid):
 
 if __name__ == '__main__':
 	'''测试'''
-	search("挪威的森林")
+	print(search('红与黑'))

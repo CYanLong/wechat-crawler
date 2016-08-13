@@ -1,3 +1,10 @@
+#-*- conding:utf-8 -*-
+
+'''
+	author: cyanlong
+	data: 2016-08-13
+'''
+
 import requests
 from scrapy.selector import Selector
 from sql import start_num
@@ -9,8 +16,6 @@ url = "http://www.qiushibaike.com/hot/page/2/"
 def joke(uid):
 	'''随机得到一条笑话'''	
 	
-	#start = start_num(uid, '段子')
-	
 	params = {
 		's': '4903577'
 	}
@@ -21,7 +26,7 @@ def joke(uid):
 	num = num + 1
 	num = str(num)
 	li_se = Selector(text=r.content.decode('utf-8')).xpath('string((//div[@id="content-left"]/div[@class="article block untagged mb15"]/div[@class="content"])['+num+'])').extract()
-	#print(str(li_se).encode('utf-8'))
+	
 	return "\n".join(li_se)
 
 

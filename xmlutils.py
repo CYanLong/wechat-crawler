@@ -1,5 +1,11 @@
 #!/usr/bin/python
 #-*- encoding=utf-8 -*-
+
+'''
+	author: cyanlong
+	data: 2016-08-13
+'''
+
 import time
 
 from lxml import etree
