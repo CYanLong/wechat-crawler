@@ -1,17 +1,29 @@
 import requests
 from scrapy.selector import Selector
+from sql import start_num
 
 import logging
 
-url = "http://www.qiushibaike.com/hot/"
+url = "http://www.qiushibaike.com/hot/page/2/"
 
-def getjoke():
+def joke(uid):
 	'''随机得到一条笑话'''	
-	r = requests.get(url)
 	
-	li_se = Selector(text=r.content.decode('utf-8')).xpath('//div[@id="content-left"]/div[@class="article block untagged mb15"]/div[@class="content"]/text()').extract()[:3]
-	li_se = [li for li in li_se if li.split(" ") != ""]
+	#start = start_num(uid, '段子')
+	
+	params = {
+		's': '4903577'
+	}
+	
+	r = requests.get(url, params)
+	
+	num = start_num(uid, '段子')
+	num = num + 1
+	num = str(num)
+	li_se = Selector(text=r.content.decode('utf-8')).xpath('string((//div[@id="content-left"]/div[@class="article block untagged mb15"]/div[@class="content"])['+num+'])').extract()
+	#print(str(li_se).encode('utf-8'))
 	return "\n".join(li_se)
-	
+
+
 if __name__ == '__main__':
-	getjoke()
+	joke('123')

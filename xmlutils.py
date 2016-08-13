@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #-*- encoding=utf-8 -*-
 import time
-import chardet
+
 from lxml import etree
 import logging
 

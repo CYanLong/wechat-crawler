@@ -4,7 +4,10 @@
 import requests
 import json
 from scrapy.selector import Selector
+import sqlite3
 import logging
+
+from sql import start_num
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -26,14 +29,16 @@ def getDataById(mid):
 	picUrl = itemData['image']
 	return title, desc, picUrl
 
-def getMovieBySub(tag="经典"):
+def getMovieBySub(start, tag="经典"):
+	''' 根据一个page_start值和分类值tag得到一个电影信息
+	'''
 	
 	req_param = {
 		"type": "movie",
 		"tag": tag,
 		"sort": "rank",
-		"page_limit": 20,
-		"page_start": 0
+		"page_limit": 1,
+		"page_start": start
 	}
 	
 	sub_url = 'https://movie.douban.com/j/search_subjects'
@@ -41,7 +46,7 @@ def getMovieBySub(tag="经典"):
 	resp = requests.get(sub_url, params = req_param)
 	
 	li = json.loads(resp.content.decode('utf-8'))['subjects']
-	print(str(li).encode('utf-8'))
+	#print(str(li).encode('utf-8'))
 	item = li[0]
 	#print(str(item).encode('utf-8'))
 	itemUrl = item['url']
@@ -69,7 +74,20 @@ def getMovieByName(movieName):
 		return getDataById(mid)
 
 
+def movieByTag(userId, tag="经典"):
+	''' 根据不同的用户返回不同的信息
+	'''
+	#logging.debug(userId, tag)
+	start = start_num(userId, tag)
+	
+	return getMovieBySub(start, tag)
+
+
 if __name__ == '__main__':
-	'''测试'''
+	'''测试
+	'''
+	#start = movieByTag('123', tag='同性')
+	#print(start)
+	#getMovieBySub('123')
 	#getMovieBySub("纪录片")
-	#getMovieByName('Sprin')
+	##getMovieBySub('23', "纪录片")
