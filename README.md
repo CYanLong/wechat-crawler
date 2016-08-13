@@ -20,13 +20,8 @@
 3.电影推荐功能
 
 4.电影信息查询功能
-<br/>
-![]("http://7xtdq2.com1.z0.glb.clouddn.com/12.jpg")
 
-<br/>
-
-![]("http://7xtdq2.com1.z0.glb.clouddn.com/1.jpg")
 ###欢迎关注.订阅号:黑了个大
 
-![]("http://7xtdq2.com1.z0.glb.clouddn.com/qrcode_for_gh_308d7f1b8b3d_344.jpg")
+<img src="http://7xtdq2.com1.z0.glb.clouddn.com/qrcode_for_gh_308d7f1b8b3d_344.jpg">
 
