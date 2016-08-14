@@ -79,7 +79,7 @@ def pro_message():
 	
 	#解析文本消息
 	li_mess = req_xml.find('Content').text.split(" ")
-	li_mess = [ s for s in li_mess if s != " "]
+	li_mess = [ s for s in li_mess if s != ""]
 
 	size = len(li_mess)
 	
